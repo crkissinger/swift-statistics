@@ -29,7 +29,7 @@
 // Sample Means and Variances. Journal of the American Statistical
 // Association, Vol. 69, No. 348, 859-866.
 
-// The statistical protocol extensions for SequenceType act
+// The statistical protocol extensions for Sequence act
 // only on sequences of Doubles, but statistics for other
 // numeric types can be calculated either using a for ... in loop
 // or using this idiom:
@@ -75,7 +75,7 @@ public protocol Accumulator: AccumulatorBase {
     /// Add a sample point to the accumulator.
     ///
     /// - Parameter x: The sample point to be added.
-    mutating func add(x: Double)
+    mutating func add(_ x: Double)
 }
 
 public protocol PairAccumulator: AccumulatorBase {
@@ -85,7 +85,7 @@ public protocol PairAccumulator: AccumulatorBase {
     /// - Parameter y: The second of a pair of sample points.
     /// - Parameter weight: The weight assigned to this pair of sample points
     ///   during calculation of the accumulator's value.
-    mutating func add(x x: Double, y: Double, weight: Double)
+    mutating func add(x: Double, y: Double, weight: Double)
 }
 
 /// An accumulator whose `value` property holds the sum
@@ -97,7 +97,7 @@ public struct Sum: Accumulator {
     /// or `nil` if no sample points have been accumulated.
     public var value: Double? { return n > 0 ? sum : nil }
     public var count: Int { return Int(n) }
-    public mutating func add(x: Double) {
+    public mutating func add(_ x: Double) {
         sum += x
         n += 1
     }
@@ -113,7 +113,7 @@ public struct Maximum: Accumulator {
     /// or `nil` if no sample points have been accumulated.
     public var value: Double? { return n > 0 ? max : nil }
     public var count: Int { return Int(n) }
-    public mutating func add(x: Double) {
+    public mutating func add(_ x: Double) {
         if x > max {
             max = x
         }
@@ -131,7 +131,7 @@ public struct Minimum: Accumulator {
     /// or `nil` if no sample points have been accumulated.
     public var value: Double? { return n > 0 ? min : nil }
     public var count: Int { return Int(n) }
-    public mutating func add(x: Double) {
+    public mutating func add(_ x: Double) {
         if x < min {
             min = x
         }
@@ -149,7 +149,7 @@ public struct Mean: Accumulator {
     /// or `nil` if no sample points have been accumulated.
     public var value: Double? { return n > 0 ? mean : nil  }
     public var count: Int { return Int(n) }
-    public mutating func add(x: Double) {
+    public mutating func add(_ x: Double) {
         n += 1
         mean += (x - mean) / n
     }
@@ -166,7 +166,7 @@ public struct PopulationVariance: Accumulator {
     /// or `nil` if no sample points have been accumulated.
     public var value: Double? { return n > 0 ? m2 / n : nil }
     public var count: Int { return Int(n) }
-    public mutating func add(x: Double) {
+    public mutating func add(_ x: Double) {
         n += 1
         let delta = x - mean
         mean += delta / n
@@ -185,7 +185,7 @@ public struct SampleVariance: Accumulator {
     /// or `nil` if less than two data points have been accumulated.
     public var value: Double? { return n > 1 ? m2 / (n - 1) : nil }
     public var count: Int { return Int(n) }
-    public mutating func add(x: Double) {
+    public mutating func add(_ x: Double) {
         n += 1
         let delta = x - mean
         mean += delta / n
@@ -211,7 +211,7 @@ public struct PearsonCorrelation: PairAccumulator {
     public var value: Double? { return n > 1 ? r / sqrt(varX * varY) : nil }
     public var count: Int { return Int(n) }
 
-    public mutating func add(x x: Double, y: Double, weight: Double = 1) {
+    public mutating func add(x: Double, y: Double, weight: Double = 1) {
         n += 1
         let nextWeightSum = weightSum + weight
         let deltaX = x - meanX
@@ -236,9 +236,9 @@ public struct PearsonCorrelation: PairAccumulator {
     }
 }
 
-public extension SequenceType where Generator.Element == Double {
+public extension Sequence where Element == Double {
 
-    private func accumulate<T: Accumulator>(accumulator: T) -> Double? {
+    private func accumulate<T: Accumulator>(_ accumulator: T) -> Double? {
         var a = accumulator
         for x in self {
             a.add(x)
@@ -279,7 +279,7 @@ public extension SequenceType where Generator.Element == Double {
     }
 }
 
-public extension SequenceType where Generator.Element == (Double, Double) {
+public extension Sequence where Element == (Double, Double) {
     /// Returns the Pearson sample correlation coefficient
     /// of the tuple elements in the sequence.
     ///

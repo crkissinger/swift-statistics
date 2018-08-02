@@ -17,7 +17,7 @@ of sample points have been accumulated. Sample points are accumulated
 using the `add(_: Double)` method for Accumulators or the
 `add(x: Double, y: Double, weight: Double)` method for PairAccumulators.
 
-An extension of the SequenceType protocol for `Double` sequences
+An extension of the Sequence protocol for `Double` sequences
 provides methods to calculate statistics on the sequence elements.
 These protocol extensions act only on `Double` sequences,
 but statistics for sequences of other numeric types can be
@@ -59,7 +59,7 @@ Using point-by-point accumulation:
     }
     print("min: \(minimum.value!), max: \(maximum.value!), mean: \(mean.value!)")
 
-Using the SequenceType extensions:
+Using the Sequence extensions:
 
     let sample = [0, 0.1, 1.0, 0.9]
     let ave = sample.mean()
