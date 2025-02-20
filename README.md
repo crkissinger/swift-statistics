@@ -1,7 +1,7 @@
 swift-statistics
 ================
 
-An implementation of statistical accumulators in Swift.
+Descriptive statistics in Swift, including an implementation of statistical accumulators.
 
 Accumulators allow a sample of data to be gathered incrementally
 in a compact form for a statistical calculation. 
